@@ -1,28 +1,17 @@
+# NeoForge Template
 
-Installation information
-=======
+This project provides a Gradle project template that can compile mods for NeoForge. This project does not require any third party libraries or dependencies.
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions at [github](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+## Getting Started
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+### IntelliJ IDEA
+This guide will show how to import the NeoForge Template into IntelliJ IDEA. The setup process is roughly equivalent to setting up the MDK.
 
-> **Note**: For Eclipse, use tasks in `Launch Group` instead of ones founds in `Java Application`. A preparation task must run before launching the game. NeoGradle uses launch groups to do these subsequently.
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
-
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license, if you do not agree with it you can change your mapping names to other crowdsourced names in your 
-build.gradle. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
-
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+1. Clone or download this repository to your computer.
+2. Configure the project by editing the `gradle.properties` file.
+3. Configure the `publish.yml` file with the proper name and link
+4. Open the template's root folder as a new project in IDEA. This is the folder that contains this README file and the gradlew executable.
+5. If your default JVM/JDK is not Java 21 you will encounter an error when opening the project. This error is fixed by going to `File > Settings > Build, Execution, Deployment > Build Tools > Gradle > Gradle JVM` and changing the value to a valid Java 21 JVM. You will also need to set the Project SDK to Java 21. This can be done by going to `File > Project Structure > Project SDK`. Once both have been set open the Gradle tab in IDEA and click the refresh button to reload the project.
+6. Configure the packages and classes in the `src` folder to match your mod.
+7. Open your Run/Debug Configurations. Under the Application category there should now be options to run NeoForge projects. Select one of the client options and try to run it.
+8. Assuming you were able to run the game in step 7 your workspace should now be set up.
