@@ -3,11 +3,12 @@
   "minVersion": "0.8",
   "package": "dev.thomasglasser.neoforgetemplate.mixin",
   "compatibilityLevel": "JAVA_21",
-    "mixins": [
-    ],
-    "client": [
+  "mixins": [
   ],
-  "server": [],
+  "client": [
+  ],
+  "server": [
+  ],
   "injectors": {
     "defaultRequire": 1
   }

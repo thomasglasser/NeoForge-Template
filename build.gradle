@@ -77,14 +77,24 @@ neoForge {
     runs {
         client {
             client()
-
+            ideName = "Client"
+            gameDirectory = project.layout.projectDirectory.dir('runs/client')
         }
         client_alt {
             client()
+            ideName = "Client 2"
+            gameDirectory = project.layout.projectDirectory.dir('runs/client_alt')
             programArguments = ["--username", "DevAlt"]
+        }
+        server {
+            server()
+            ideName = "Server"
+            gameDirectory = project.layout.projectDirectory.dir('runs/server')
         }
         data {
             data()
+            ideName = "Data Generation"
+            gameDirectory = project.layout.projectDirectory.dir('runs/data')
         }
     }
 }
@@ -104,7 +114,7 @@ dependencies {
 processResources {
     def expandProps = [
             "version": version,
-            "group": project.group, //Else we target the task's group.
+            "group": project.group,
             "minecraft_version": minecraft_version,
             "next_minecraft_version": next_minecraft_version,
             "mod_name": mod_name,
