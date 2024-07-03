@@ -145,6 +145,14 @@ spotless {
 	}
 }
 
+tasks.named('compileJava') {
+	dependsOn 'spotlessApply'
+}
+
+javadoc {
+	failOnError = false
+}
+
 processResources {
 	def expandProps = [
 			"version": version,
