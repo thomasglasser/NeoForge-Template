@@ -1,9 +1,12 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 plugins {
     id 'idea'
     id 'java-library'
 	id 'maven-publish'
 	id 'signing'
-	id 'com.diffplug.spotless' version '6.22.0'
+	id 'dev.lukebemish.immaculate' version '0.1.6'
 	id 'net.neoforged.moddev' version "${mdg_version}"
 }
 
@@ -120,21 +123,24 @@ dependencies {
 	localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
-spotless {
-	format 'misc', {
-		target '*.gradle', '.gitattributes', '.gitignore'
+immaculate {
+	workflows.register('java') {
+		java()
+		files.from rootProject.fileTree("src", {
+			include "**/*.java"
+		})
+		noTabs()
+		googleFixImports()
+		toggleOff = 'spotless:off'
+		toggleOn = 'spotless:on'
+		eclipse {
+			version '3.37.0'
+			config = rootProject.file('codeformat/formatter-config.xml')
+		}
 
-		trimTrailingWhitespace()
-		indentWithTabs()
-	}
-	java {
-		endWithNewline()
-		indentWithSpaces()
-		removeUnusedImports()
-		toggleOffOn()
-		eclipse().configFile rootProject.file('codeformat/formatter-config.xml')
-		importOrder()
 
+		// courtesy of diffplug/spotless#240
+		// https://github.com/diffplug/spotless/issues/240#issuecomment-385206606
 		custom 'noWildcardImports', { String fileContents ->
 			if (fileContents.contains('*;\n')) {
 				throw new GradleException('No wildcard imports are allowed!')
@@ -147,14 +153,26 @@ spotless {
 			}
 		}
 
-        custom 'jetbrainsNullable', { String fileContents ->
-            fileContents.replace('javax.annotation.Nullable', 'org.jetbrains.annotations.Nullable')
-        }
-    }
+		//Trim any trailing whitespace from patch additions
+		def trailingWhitespace = Pattern.compile('^\\+.*[ \t]+\$', Pattern.UNIX_LINES | Pattern.MULTILINE)
+		custom 'trimTrailingWhitespace', { String fileContents ->
+			Matcher matcher = trailingWhitespace.matcher(fileContents)
+			StringBuilder sb = new StringBuilder()
+			while (matcher.find()) {
+				matcher.appendReplacement(sb, matcher.group().trim())
+			}
+			matcher.appendTail(sb)
+			return sb.toString()
+		}
+
+		custom 'jetbrainsNullable', { String fileContents ->
+			fileContents.replace('javax.annotation.Nullable', 'org.jetbrains.annotations.Nullable')
+		}
+	}
 }
 
-tasks.named('spotlessMiscCheck') {
-    dependsOn 'spotlessApply'
+tasks.named('compileJava') {
+	dependsOn 'immaculateApply'
 }
 
 javadoc {
@@ -206,7 +224,7 @@ publishing {
 				licenses {
 					license {
 						name = project.license
-						url = "https://github.com/thomasglasser/${github_name}/blob/${minecraft_version}/LICENSE"
+						url = "https://github.com/thomasglasser/${github_name}/blob/${minecraft_version}/LICENSE.md"
 					}
 				}
 				developers {
